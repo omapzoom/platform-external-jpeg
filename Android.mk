@@ -1,4 +1,9 @@
 LOCAL_PATH:= $(call my-dir)
+
+ifeq ($(ARCH_ARM_HAVE_NEON),true)
+ANDROID_JPEG_USE_VENUM :=true
+endif
+
 include $(CLEAR_VARS)
 
 LOCAL_ARM_MODE := arm
@@ -10,7 +15,7 @@ LOCAL_SRC_FILES := \
 	jdatadst.c jdatasrc.c jdcoefct.c jdcolor.c jddctmgr.c jdhuff.c \
 	jdinput.c jdmainct.c jdmarker.c jdmaster.c jdmerge.c jdphuff.c \
 	jdpostct.c jdsample.c jdtrans.c jerror.c jfdctflt.c jfdctfst.c \
-	jfdctint.c jidctflt.c jidctred.c jquant1.c \
+	jfdctint.c jidctflt.c jquant1.c \
 	jquant2.c jutils.c jmemmgr.c \
 
 # use ashmem as libjpeg decoder's backing store
@@ -33,13 +38,20 @@ endif
 #ANDROID_JPEG_NO_ASSEMBLER := true
 
 ifeq ($(strip $(ANDROID_JPEG_NO_ASSEMBLER)),true)
-LOCAL_SRC_FILES += jidctint.c jidctfst.c
+LOCAL_SRC_FILES += jidctint.c jidctfst.c jidctred.c
 else
-LOCAL_SRC_FILES += jidctint.c jidctfst.S
+ifeq ($(ANDROID_JPEG_USE_VENUM),true)
+LOCAL_SRC_FILES += jidctvenum.c jdcolor-neon.S jidct-neon.S jidctfst.S
+else
+LOCAL_SRC_FILES += jidctint.c jidctfst.S jidctred.c
+endif
 endif
 
-LOCAL_CFLAGS += -DAVOID_TABLES 
+LOCAL_CFLAGS += -DAVOID_TABLES
 LOCAL_CFLAGS += -O3 -fstrict-aliasing -fprefetch-loop-arrays
+ifeq ($(ANDROID_JPEG_USE_VENUM),true)
+LOCAL_CFLAGS += -D__ARM_HAVE_NEON
+endif
 #LOCAL_CFLAGS += -march=armv6j
 
 # enable tile based decode

@@ -41,7 +41,7 @@ ifeq ($(strip $(ANDROID_JPEG_NO_ASSEMBLER)),true)
 LOCAL_SRC_FILES += jidctint.c jidctfst.c jidctred.c
 else
 ifeq ($(ANDROID_JPEG_USE_VENUM),true)
-LOCAL_SRC_FILES += jidctvenum.c jdcolor-neon.S jidct-neon.S jidctfst.S
+LOCAL_SRC_FILES += jidctvenum.c jdcolor-neon.S jidct-neon.S armv6_idct.S
 else
 LOCAL_SRC_FILES += jidctint.c jidctfst.S jidctred.c
 endif
@@ -56,6 +56,9 @@ endif
 
 # enable tile based decode
 LOCAL_CFLAGS += -DANDROID_TILE_BASED_DECODE
+
+# enable armv6 idct assembly
+LOCAL_CFLAGS += -DANDROID_ARMV6_IDCT
 
 LOCAL_MODULE:= libjpeg
 

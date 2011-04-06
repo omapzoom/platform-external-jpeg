@@ -362,6 +362,9 @@ idct_1x1_venum:
     cmp     r2, #255            @
     movgt   r2, #255            @ Clamp to be less than 255
     str     r2, [r1]            @ Save output
+.ifdef NEEDS_ARM_ERRATA_754319_754320_ASM
+    vmov    s0,s0               @ NOP for ARM Errata
+.endif
     bx      lr                  @ Return to caller
 
     .endfunc
@@ -463,6 +466,9 @@ idct_2x2_venum:
     add        r1, r1, r2      @ Add the offset to the output pointer
     vstr       d1, [r1]        @ Store  x2 | x3 | X | X
                                @ Potential out of boundary issue
+.ifdef NEEDS_ARM_ERRATA_754319_754320_ASM
+    vmov    s0,s0               @ NOP for ARM Errata
+.endif
     bx         lr              @ Return to caller
 
     .endfunc
@@ -634,6 +640,9 @@ idct_4x4_venum:
         vst1.16       {d19}, [r1], r2  @  d18:   x8 | x9  | x10 | x11 (LSB | MSB)
         vst1.16       {d18}, [r1], r2  @  d19:   x12| x13 | x14 | x15 (LSB | MSB)
 
+.ifdef NEEDS_ARM_ERRATA_754319_754320_ASM
+    vmov    s0,s0               @ NOP for ARM Errata
+.endif
         bx         lr              @ Return to caller
 
     .endfunc
@@ -736,6 +745,9 @@ idct_8x8_venum:
         BIG_BODY_TRANSPOSE_INPUT
         vpop {d8-d15}
         pop  {r5-r9}
+.ifdef NEEDS_ARM_ERRATA_754319_754320_ASM
+    vmov    s0,s0               @ NOP for ARM Errata
+.endif
         bx   lr
     .endfunc
 

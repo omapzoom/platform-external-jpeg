@@ -330,8 +330,10 @@ trailing_yvup2rgb565:
     VST2.U8 {D27[6], D28[6]}, [p_rgb]!  @ store one more pixel
 
 end_yvup2rgb565:
+.ifdef NEEDS_ARM_ERRATA_754319_754320_ASM
+    VMOV s0,s0                           @ NOP for ARM Errata
+.endif
     LDMFD SP!, {PC}
-
     .endfunc                             @ end of yvup2rgb565
 
 
@@ -644,6 +646,9 @@ trailing_yyvup2rgb565:
     VST2.U8 {D22[6],D23[6]}, [p_rgb]! @ store one more pixel
 
 end_yyvup2rgb565:
+.ifdef NEEDS_ARM_ERRATA_754319_754320_ASM
+    VMOV s0,s0                           @ NOP for ARM Errata
+.endif
     LDMFD SP!, {PC}
 
     .endfunc                           @ end of yyvup2rgb565
@@ -894,6 +899,9 @@ trailing_yvup2bgr888:
     VST3.U8 {D26[6], D27[6], D28[6]}, [p_bgr]!    @ store one more pixel
 
 end_yvup2bgr888:
+.ifdef NEEDS_ARM_ERRATA_754319_754320_ASM
+    VMOV s0,s0                           @ NOP for ARM Errata
+.endif
     LDMFD SP!, {PC}
 
     .endfunc                           @ end of yvup2bgr888
@@ -1193,6 +1201,9 @@ trailing_yyvup2bgr888:
     VST3.U8 {D21[6],D22[6],D23[6]}, [p_bgr]!  @ store one more pixel
 
 end_yyvup2bgr888:
+.ifdef NEEDS_ARM_ERRATA_754319_754320_ASM
+    VMOV s0,s0                           @ NOP for ARM Errata
+.endif
     LDMFD SP!, {PC}
 
     .endfunc                           @ end of yyvup2bgr888

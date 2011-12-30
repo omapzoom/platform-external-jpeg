@@ -42,7 +42,7 @@ else
 ifeq ($(ANDROID_JPEG_USE_VENUM),true)
 LOCAL_SRC_FILES += jidctvenum.c jdcolor-neon.S jidct-neon.S armv6_idct.S
 else
-LOCAL_SRC_FILES += jidctint.c jidctfst.S jidctred.c
+LOCAL_SRC_FILES += jidctint.c jidctfst.c jidctred.c armv6_idct.S
 endif
 endif
 
